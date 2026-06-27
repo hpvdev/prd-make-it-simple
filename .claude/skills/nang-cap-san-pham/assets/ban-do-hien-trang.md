@@ -10,7 +10,7 @@
 - Services/logic: "<…>"
 
 ## Cụm tính năng ĐANG có (suy từ code)
-# Mỗi cụm gán mã (2 chữ hoa). Mỗi tính năng: id <CỤM>-NN · (C/P) · tên · done_when (suy từ hành vi code).
+> Mỗi cụm gán mã (2 chữ hoa). Mỗi tính năng: id <CỤM>-NN · (C/P) · tên · done_when (suy từ hành vi code).
 - code: XX
   name: "<tên cụm>"
   features:
@@ -24,9 +24,10 @@
 ## Dữ liệu chính ĐANG lưu (suy từ schema)
 - name: "<loại dữ liệu>"
   stores: ["<trường chính>"]
+  evidence: "<model/schema file:dòng làm bằng chứng>"
 
 ## Khoảng trống / điểm nghi ngờ
-# Chỗ agent KHÔNG chắc — cần user xác nhận ở GATE 1.
+> Chỗ agent KHÔNG chắc — cần user xác nhận ở GATE 1.
 - "<vd: có route X nhưng không rõ thuộc cụm nào>"
 
 ## Đối chiếu với PRD cũ (chỉ khi có docs/sdd/PRD.yaml)
