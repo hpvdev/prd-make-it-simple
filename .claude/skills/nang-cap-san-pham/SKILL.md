@@ -67,3 +67,31 @@ milestone tối ưu ở Bước 4 (ca 4). Không bật → bỏ qua.
 
 > 💡 **Đề xuất:** nếu user chỉ mô tả "thêm tính năng X" → nghiêng nhánh **gọn**; chỉ chọn **đầy** khi
 > user nói tới đổi hướng/đối thủ mới. Luôn để user chốt — đây là gate cứng.
+
+## Bước 3 — Đào yêu cầu nâng cấp (brainstorm với user)
+Hỏi cái muốn thêm/sửa/tối ưu (mỗi lần một ý, kèm ví dụ + 💡 đề xuất). **Đối chiếu bản đồ hiện trạng**:
+- Cụm nào bị đụng tới? Có cụm mới hoàn toàn không?
+- Data model có đổi không? (nếu phá tương thích → ca 2 dưới)
+- (Nhánh "đầy") chạy cổng nghiên cứu + `chien-luoc-dot-pha` trước khi chốt hướng.
+
+**Chủ động nêu xung đột (ca 3):** nếu cái mới mâu thuẫn ràng buộc cụm cũ (qua links trong PRD) →
+nói thẳng cho user + đề xuất cách hòa giải, KHÔNG lặng lẽ thêm.
+
+## Bước 4 — Cập nhật in-place PRD + ROADMAP
+1. **Archive bản cũ** (`docs/sdd/archive/` + hậu tố thời gian — lệnh ở conventions §2) TRƯỚC khi ghi.
+2. **PRD.yaml:** thêm tính năng với **mã ID nối tiếp** (đọc mã lớn nhất mỗi cụm → cấp tiếp; cụm mới →
+   mã cụm mới từ `-01`). Đánh dấu `[MỚI]`/`[SỬA]` ở `desc`. Giữ đủ (C)/(P) + done_when kiểm được + links.
+   **KHÔNG tái dùng số của tính năng đã xóa.**
+3. **ROADMAP.yaml:** xếp tính năng mới vào milestone (mới hoặc có sẵn) + depends_on + done_when đo được.
+   Cập nhật `coverage`. **Việc "tối ưu" (ca 4)** → milestone bảo trì riêng `OPT-n` (mục tiêu + tiêu chí
+   đo được như "p95 < 200ms"), KHÔNG nhồi vào PRD.
+4. 🚧 **Agent phản biện:** dispatch `danh-gia-san-pham` (truyền PRD đã cập nhật + một dòng mô tả nâng
+   cấp). Fallback theo `sdd-common/danh-gia-doc-lap.md`. Nhận phát hiện → **vá lỗi Cao**.
+5. **Trình user** bản cuối + tóm tắt (thêm/sửa gì, gắn cờ ⚠️ gì, còn gì để ngỏ).
+
+## Bốn ca khó (xử đúng để brownfield không vỡ)
+- **Ca 1 — PRD cũ lệch code:** đã xử ở Bước 0 (đối chiếu → tụt S3) + GATE 1 (user trọng tài).
+- **Ca 2 — đổi data model phá tương thích:** chỉ GHI NHẬN "tính năng này đụng data model X" vào PRD +
+  **gắn cờ ⚠️ cần người duyệt + cần chiến lược migration**, đẩy quyết định sang Pha 2. KHÔNG tự chốt.
+- **Ca 3 — xung đột tính năng cũ:** nêu rõ cho user ở Bước 3 (qua links), đề xuất hòa giải, user quyết.
+- **Ca 4 — nhánh tối ưu (không thêm tính năng):** đi vào ROADMAP (`OPT-n`), KHÔNG vào PRD. Cổng C feed vào đây.
