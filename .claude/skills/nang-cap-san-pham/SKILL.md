@@ -94,7 +94,7 @@ nói thẳng cho user + đề xuất cách hòa giải, KHÔNG lặng lẽ thêm
 - **Ca 2 — đổi data model phá tương thích:** chỉ GHI NHẬN "tính năng này đụng data model X" vào PRD +
   **gắn cờ ⚠️ cần người duyệt + cần chiến lược migration**, đẩy quyết định sang Pha 2. KHÔNG tự chốt.
   **Chỉ ghi tên model/field bị đụng + một dòng vì sao phá tương thích** — KHÔNG ghi migration plan, KHÔNG ghi câu lệnh ALTER/đổi schema, KHÔNG đề xuất chiến lược kỹ thuật (đó là việc Pha 2).
-  **Cờ ghi thống nhất dạng một dòng trong `desc`:** `⚠️ ĐỤNG DATA MODEL: <model/field> — cần duyệt + migration ở Pha 2`.
+  **Cờ ghi thống nhất dạng một dòng trong `desc`** *(chỉ đánh dấu để Pha 2 lo, KHÔNG kèm plan)*: `⚠️ ĐỤNG DATA MODEL: <model/field> — cần duyệt + migration ở Pha 2`.
 - **Ca 3 — xung đột tính năng cũ:** nêu rõ cho user ở Bước 3 (qua links), đề xuất hòa giải, user quyết.
 - **Ca 4 — nhánh tối ưu (không thêm tính năng):** đi vào ROADMAP (`OPT-n`), KHÔNG vào PRD. Cổng C feed vào đây.
 
