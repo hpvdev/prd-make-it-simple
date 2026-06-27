@@ -94,5 +94,34 @@ nói thẳng cho user + đề xuất cách hòa giải, KHÔNG lặng lẽ thêm
 - **Ca 2 — đổi data model phá tương thích:** chỉ GHI NHẬN "tính năng này đụng data model X" vào PRD +
   **gắn cờ ⚠️ cần người duyệt + cần chiến lược migration**, đẩy quyết định sang Pha 2. KHÔNG tự chốt.
   **Chỉ ghi tên model/field bị đụng + một dòng vì sao phá tương thích** — KHÔNG ghi migration plan, KHÔNG ghi câu lệnh ALTER/đổi schema, KHÔNG đề xuất chiến lược kỹ thuật (đó là việc Pha 2).
+  **Cờ ghi thống nhất dạng một dòng trong `desc`:** `⚠️ ĐỤNG DATA MODEL: <model/field> — cần duyệt + migration ở Pha 2`.
 - **Ca 3 — xung đột tính năng cũ:** nêu rõ cho user ở Bước 3 (qua links), đề xuất hòa giải, user quyết.
 - **Ca 4 — nhánh tối ưu (không thêm tính năng):** đi vào ROADMAP (`OPT-n`), KHÔNG vào PRD. Cổng C feed vào đây.
+
+## Cổng chất lượng (phải đạt mới bàn giao Pha 2/3)
+- [ ] Đã dò đúng S1/S2/S3 và xử đúng nhánh; S1 trỏ về `tao-san-pham`.
+- [ ] (S3) Bản đồ hiện trạng đã qua **GATE 1** — user xác nhận trước khi đào yêu cầu mới.
+- [ ] User đã **chọn loại nâng cấp** qua GATE 2 (gate cứng).
+- [ ] Mã ID mới **nối tiếp, không tái dùng số cũ**; mọi tính năng thêm/sửa đủ (C)/(P) + "Xong khi".
+- [ ] Đổi data model phá tương thích đã **gắn cờ ⚠️ đẩy sang Pha 2**, không tự chốt.
+- [ ] Xung đột tính năng cũ đã **nêu rõ cho user**, không lặng lẽ thêm.
+- [ ] "Tối ưu" đi vào **ROADMAP (`OPT-n`)**, không nhồi vào PRD.
+- [ ] Bản cũ đã **archive**; phần thêm/sửa **đánh dấu [MỚI]/[SỬA]** để truy vết.
+- [ ] PRD cập nhật đã **qua agent `danh-gia-san-pham`**, lỗi Cao đã vá hoặc user chấp nhận để ngỏ.
+
+## Bẫy cần tránh
+- Tin PRD cũ mù quáng mà không đối chiếu code → bản đồ sai từ gốc.
+- Tự quyết/bỏ qua GATE 1 hoặc GATE 2 (gate cứng — lỗi nặng).
+- Tái dùng mã ID của tính năng đã xóa → lẫn lịch sử.
+- Tự chốt chiến lược migration (đó là Pha 2).
+- Nhồi "tối ưu / nợ kỹ thuật" vào PRD làm bẩn nguồn chân lý "sản phẩm có gì".
+- Thêm tính năng xung đột tính năng cũ mà không cảnh báo user.
+- Để delta nằm rải rác thay vì cập nhật in-place → hai nguồn lệch nhau.
+
+---
+
+## Kết thúc — bàn giao
+Khi PRD + ROADMAP đã cập nhật và qua cổng chất lượng, tóm tắt cho user + gợi bước kế:
+- Thay đổi đụng kiến trúc/data model (có cờ ⚠️) → chạy `tao-nen-tang` (Pha 2) cập nhật nền tảng.
+- Chỉ thêm tính năng trong khung cũ → đi thẳng Pha 3 (Superpowers) cho milestone mới.
+KHÔNG tự nhảy sang code.
