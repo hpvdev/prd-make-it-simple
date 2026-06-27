@@ -1,0 +1,12 @@
+# Personal / machine-local — never commit
+settings.local.json
+
+# Plugin caches & runtime state
+plugins/cache/
+.cache/
+
+# Plugin-managed BMAD skills (delivered via superpowers plugin) — keep local only
+skills/bmad-*/
+
+# OS noise
+.DS_Store

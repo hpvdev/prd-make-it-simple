@@ -1,0 +1,369 @@
+project: "Đặt Lịch Tiệm Tóc"
+
+problem: >
+  Chủ tiệm tóc nhỏ (1–5 thợ) nhận lịch qua sổ tay/Zalo nên hay xếp trùng giờ, khách tới phải chờ,
+  và khách quên lịch (no-show). Ví dụ thật: hai khách được hẹn 19h cùng một thợ, một người bỏ về và
+  không quay lại. Người dùng chính: chủ tiệm (vừa quản lý vừa cắt). Người dùng phụ: khách của tiệm.
+
+clusters:
+  - code: DL
+    name: "Đặt lịch"
+    features:
+      - id: DL-01
+        layer: C
+        name: "Khách đặt lịch online"
+        desc: "chọn dịch vụ/thợ/giờ trống + nhập tên, SĐT"
+        done_when: "tạo được lịch hẹn và hiện trên lịch tiệm"
+        links: [TT-02]
+      - id: DL-02
+        layer: C
+        name: "Chủ/thợ tạo lịch hộ khách"
+        desc: "khách gọi điện hoặc tới trực tiếp"
+        done_when: "lưu được lịch không cần khách có tài khoản"
+        links: []
+      - id: DL-03
+        layer: C
+        name: "Xem lịch ngày/tuần theo thợ"
+        desc: "dạng cột thời gian"
+        done_when: "thấy đúng các hẹn trong khoảng đã chọn"
+        links: []
+      - id: DL-04
+        layer: C
+        name: "Sửa / dời giờ hẹn"
+        desc: "kéo-thả hoặc đổi giờ"
+        done_when: "lịch cập nhật và không đè lên hẹn khác"
+        links: [DL-08]
+      - id: DL-05
+        layer: C
+        name: "Hủy hẹn"
+        desc: "chủ hoặc khách, có ghi lý do"
+        done_when: "hẹn chuyển Đã hủy, giải phóng khung giờ"
+        links: []
+      - id: DL-06
+        layer: C
+        name: "Trạng thái hẹn"
+        desc: "ChoXacNhan → DaXacNhan → HoanTat / KhongDen"
+        done_when: "đổi đúng trạng thái và lọc được theo trạng thái"
+        links: []
+      - id: DL-07
+        layer: C
+        name: "Nhận khách vãng lai (walk-in)"
+        desc: "thêm nhanh vào khung trống"
+        done_when: "chèn được hẹn tức thì"
+        links: [DL-08]
+      - id: DL-08
+        layer: C
+        name: "Chặn đặt trùng giờ một thợ"
+        desc: "giá trị cốt lõi hơn Zalo/sổ tay"
+        done_when: "tạo hẹn đè giờ cùng thợ thì hệ thống từ chối, báo khung đã bận; hai hẹn kề sát 10h00–10h45 và 10h45–11h30 KHÔNG bị coi là trùng"
+        links: [DL-01, DL-07]
+      - id: DL-09
+        layer: P
+        name: "Chặn đặt ngoài giờ mở cửa/giờ nghỉ"
+        desc: "theo giờ tiệm và giờ thợ"
+        done_when: "khung giờ đóng không hiện để chọn"
+        links: [TT-03, TH-03]
+      - id: DL-10
+        layer: P
+        name: "Khóa slot tạm khi đang đặt"
+        desc: "tránh 2 khách giành một slot"
+        done_when: "slot khóa tạm trong lúc một người đang đặt"
+        links: [DL-01]
+
+  - code: KH
+    name: "Khách hàng"
+    features:
+      - id: KH-01
+        layer: C
+        name: "Sổ khách hàng"
+        desc: "tên, SĐT, ghi chú, ngày sinh (tùy chọn)"
+        done_when: "thêm/xem được khách"
+        links: []
+      - id: KH-02
+        layer: C
+        name: "Hồ sơ khách"
+        desc: "lịch sử hẹn, dịch vụ hay dùng, số no-show"
+        done_when: "mở một khách thấy đủ lịch sử"
+        links: []
+      - id: KH-03
+        layer: C
+        name: "Tìm khách"
+        desc: "theo tên hoặc SĐT"
+        done_when: "gõ là ra đúng khách"
+        links: []
+      - id: KH-04
+        layer: P
+        name: "Gộp khách trùng"
+        desc: "cùng SĐT bị tạo 2 lần"
+        done_when: "gộp xong lịch sử dồn về một hồ sơ"
+        links: []
+      - id: KH-05
+        layer: P
+        name: "Sửa / xóa khách"
+        desc: "xóa có xác nhận; còn lịch sắp tới thì cảnh báo"
+        done_when: "hủy thì không xóa, đồng ý thì xóa"
+        links: [SYS-11]
+
+  - code: DV
+    name: "Dịch vụ & bảng giá"
+    features:
+      - id: DV-01
+        layer: C
+        name: "Danh mục dịch vụ"
+        desc: "tên, thời lượng, giá"
+        done_when: "thêm/sửa/xóa dịch vụ được"
+        links: []
+      - id: DV-02
+        layer: C
+        name: "Thời lượng quyết định khung giờ"
+        desc: "hẹn dài đúng theo thời lượng dịch vụ"
+        done_when: "chọn dịch vụ 45 phút thì hẹn chiếm 45 phút"
+        links: [DL-08]
+      - id: DV-03
+        layer: P
+        name: "Bật/tắt dịch vụ"
+        desc: "tạm ngừng nhận thay vì xóa"
+        done_when: "dịch vụ tắt không hiện khi đặt"
+        links: []
+      - id: DV-04
+        layer: P
+        name: "Nhóm dịch vụ"
+        desc: "Cắt / Nhuộm / Gội… cho dễ chọn"
+        done_when: "lọc dịch vụ theo nhóm"
+        links: []
+
+  - code: TH
+    name: "Thợ & lịch làm"
+    features:
+      - id: TH-01
+        layer: C
+        name: "Danh sách thợ"
+        desc: "tên, ảnh, dịch vụ làm được"
+        done_when: "thêm/sửa/xóa thợ"
+        links: []
+      - id: TH-02
+        layer: C
+        name: "Giờ làm của thợ"
+        desc: "ca/ngày trong tuần"
+        done_when: "lịch đặt chỉ mở trong giờ làm của thợ"
+        links: [DL-09]
+      - id: TH-03
+        layer: C
+        name: "Ngày nghỉ/nghỉ phép của thợ"
+        desc: ""
+        done_when: "ngày nghỉ không cho đặt"
+        links: [DL-09]
+      - id: TH-04
+        layer: P
+        name: "Phân quyền chủ/thợ"
+        desc: "chủ toàn quyền, thợ chỉ xem lịch mình"
+        done_when: "thợ không sửa được dữ liệu tiệm"
+        links: []
+
+  - code: NL
+    name: "Nhắc lịch"
+    features:
+      - id: NL-01
+        layer: C
+        name: "Nhắc khách trước giờ hẹn"
+        desc: "vd trước 24h và 2h qua một kênh cụ thể (Zalo ZNS/SMS/email)"
+        done_when: "tạo hẹn lúc X, tới mốc trước 24h thì có bản ghi gửi trạng thái thành công từ nhà cung cấp (callback ZNS/SMS) đúng mốc theo múi giờ tiệm; ca lỗi rơi vào NL-04"
+        links: [NL-04, SYS-08, TT-04]
+      - id: NL-02
+        layer: C
+        name: "Xác nhận/hủy qua link trong tin nhắc"
+        desc: ""
+        done_when: "khách bấm link thì trạng thái hẹn đổi theo"
+        links: [DL-05, DL-06]
+      - id: NL-03
+        layer: P
+        name: "Chống gửi trùng"
+        desc: "một mốc chỉ nhắc một lần kể cả khi chạy lại"
+        done_when: "không có 2 tin cùng mốc"
+        links: []
+      - id: NL-04
+        layer: P
+        name: "Xử lý gửi thất bại"
+        desc: "thử lại có giới hạn, ghi log, báo chủ tiệm"
+        done_when: "thấy được tin nào gửi hỏng"
+        links: []
+      - id: NL-05
+        layer: P
+        name: "Mẫu tin nhắc tùy chỉnh"
+        desc: "tên tiệm, giờ hẹn, địa chỉ"
+        done_when: "sửa mẫu và tin gửi theo mẫu"
+        links: []
+
+  - code: BC
+    name: "Báo cáo"
+    features:
+      - id: BC-01
+        layer: C
+        name: "Bảng điều khiển hôm nay"
+        desc: "số hẹn, khách mới, doanh thu ước tính"
+        done_when: "tạo 3 hẹn hoàn tất 300k thì bảng điều khiển hiện đúng tổng 300k và 3 hẹn"
+        links: [DL-06, DV-01]
+      - id: BC-02
+        layer: C
+        name: "Doanh thu theo ngày/tháng"
+        desc: "theo dịch vụ đã hoàn tất"
+        done_when: "tổng theo khoảng bằng tổng các hẹn HoanTat trong khoảng"
+        links: [DL-06, DV-01]
+      - id: BC-03
+        layer: P
+        name: "Tỷ lệ no-show"
+        desc: "theo khách/thợ"
+        done_when: "lọc và xếp được khách hay bỏ hẹn"
+        links: []
+      - id: BC-04
+        layer: P
+        name: "Thống kê công suất thợ"
+        desc: "giờ kín/giờ trống"
+        done_when: "thấy thợ nào quá tải hay rảnh"
+        links: []
+
+  - code: TT
+    name: "Tài khoản tiệm & cài đặt"
+    features:
+      - id: TT-01
+        layer: C
+        name: "Đăng ký/đăng nhập tiệm"
+        desc: "email + mật khẩu (băm argon2id)"
+        done_when: "đăng nhập vào đúng dữ liệu tiệm"
+        links: []
+      - id: TT-02
+        layer: C
+        name: "Hồ sơ tiệm"
+        desc: "tên, địa chỉ, SĐT, logo, trang đặt lịch công khai"
+        done_when: "khách mở link đặt lịch thấy đúng tiệm"
+        links: [DL-01]
+      - id: TT-03
+        layer: C
+        name: "Giờ mở cửa của tiệm"
+        desc: "theo ngày trong tuần + ngày lễ nghỉ"
+        done_when: "ngoài giờ mở cửa không cho đặt"
+        links: [DL-09]
+      - id: TT-04
+        layer: P
+        name: "Cài đặt nhắc mặc định"
+        desc: "mốc nhắc, kênh, mẫu tin"
+        done_when: "thay đổi áp cho hẹn mới"
+        links: [NL-01]
+      - id: TT-05
+        layer: P
+        name: "Quên mật khẩu"
+        desc: "qua email hoặc SĐT"
+        done_when: "đặt lại được mật khẩu"
+        links: []
+      - id: TT-06
+        layer: P
+        name: "Quản lý gói thuê bao & dùng thử"
+        desc: "xem trạng thái gói + ngày hết hạn"
+        done_when: "hết hạn thì khóa tính năng trả phí đúng cách (định nghĩa rõ khóa gì)"
+        links: []
+
+  - code: SYS
+    name: "Xuyên suốt cả sản phẩm"
+    features:
+      - id: SYS-01
+        layer: P
+        name: "Khung trang chung"
+        desc: "điều hướng, menu tiệm, đăng xuất"
+        done_when: "mọi trang dùng chung khung"
+        links: []
+      - id: SYS-02
+        layer: P
+        name: "Trạng thái đang tải"
+        desc: "khung xương cho lịch và danh sách"
+        done_when: "thấy khung xương khi dữ liệu chưa về"
+        links: []
+      - id: SYS-03
+        layer: P
+        name: "Trang lỗi"
+        desc: "404 / 403 / 500"
+        done_when: "vào URL sai thì 404; thiếu quyền thì 403"
+        links: []
+      - id: SYS-04
+        layer: P
+        name: "Báo lỗi & thành công"
+        desc: "toast thống nhất toàn app"
+        done_when: "thao tác lưu thành công/thất bại đều có thông báo"
+        links: []
+      - id: SYS-05
+        layer: P
+        name: "Mất mạng / lưu thất bại"
+        desc: "báo rõ, cho thử lại, không mất dữ liệu đang nhập"
+        done_when: "ngắt mạng khi lưu thì báo lỗi và giữ dữ liệu form"
+        links: []
+      - id: SYS-06
+        layer: P
+        name: "Responsive"
+        desc: "dùng tốt trên điện thoại"
+        done_when: "thao tác chính chạy trên màn hình nhỏ"
+        links: []
+      - id: SYS-07
+        layer: P
+        name: "Hỗ trợ tiếp cận (a11y)"
+        desc: "bàn phím, trình đọc màn hình, tương phản WCAG AA"
+        done_when: "điều hướng được bằng bàn phím; tương phản ≥ 4.5:1"
+        links: []
+      - id: SYS-08
+        layer: P
+        name: "Ngày giờ & múi giờ"
+        desc: "nhất quán theo múi giờ tiệm (VN GMT+7)"
+        done_when: "mọi giờ hiển thị theo múi giờ tiệm"
+        links: []
+      - id: SYS-09
+        layer: P
+        name: "Trợ giúp / FAQ"
+        desc: "kèm nút phản hồi"
+        done_when: "có trang trợ giúp truy cập được"
+        links: []
+      - id: SYS-10
+        layer: P
+        name: "Nhật ký hoạt động (audit)"
+        desc: "ai đổi/hủy lịch, khi nào"
+        done_when: "đổi/hủy một hẹn thì có bản ghi audit"
+        links: []
+      - id: SYS-11
+        layer: P
+        name: "Quyền riêng tư & dữ liệu cá nhân"
+        desc: "theo Nghị định 13/2023 — chính sách, tiệm là bên kiểm soát, đồng ý nhận tin, xóa dữ liệu theo yêu cầu"
+        done_when: "có trang chính sách và thao tác xóa dữ liệu khách theo yêu cầu chạy được"
+        links: [KH-05, NL-01]
+
+key_data:
+  - name: "Tiệm"
+    stores: ["tên", "địa chỉ", "giờ mở cửa", "gói thuê bao", "cài đặt nhắc"]
+  - name: "Thợ"
+    stores: ["tên", "dịch vụ làm được", "giờ làm", "ngày nghỉ", "quyền"]
+  - name: "Khách"
+    stores: ["tên", "SĐT", "ghi chú", "lịch sử", "số no-show"]
+  - name: "Dịch vụ"
+    stores: ["tên", "nhóm", "thời lượng", "giá", "bật/tắt"]
+  - name: "Lịch hẹn"
+    stores: ["khách", "thợ", "dịch vụ", "giờ bắt đầu", "giờ kết thúc", "trạng thái", "kênh đặt"]
+
+out_of_scope:
+  - "Không bán hàng / quản lý kho mỹ phẩm."
+  - "Không thanh toán online (khách trả tại tiệm); chỉ ghi nhận doanh thu."
+  - "Không có chợ khách (marketplace) kéo khách lạ như Booksy/Fresha."
+  - "Không quản lý nhiều chi nhánh trong một tài khoản."
+  - "Không làm app gốc iOS/Android riêng (chỉ web responsive)."
+
+nfr:
+  security: "Đăng nhập + phân quyền chủ/thợ; cô lập dữ liệu giữa các tiệm; tuân thủ Nghị định 13/2023 cho dữ liệu khách."
+  performance: "Tiệm nhỏ, tải thấp; nhưng chặn trùng giờ phải an toàn trước truy cập đồng thời (tầng DB)."
+  reliability: "Sao lưu & khôi phục dữ liệu lịch/khách; mất lịch là mất khách."
+
+fast_track: ["thêm/sửa/xóa khách-dịch vụ-thợ", "danh sách", "lọc", "báo cáo", "giao diện"]
+review_carefully:
+  - "đăng nhập & phân quyền (TT-01, TH-04)"
+  - "chặn trùng giờ (DL-08)"
+  - "gửi nhắc đúng giờ theo múi giờ (NL-01)"
+  - "khóa tính năng theo gói (TT-06)"
+
+open_questions:
+  - "Kênh nhắc chính nên là Zalo OA, SMS hay email? (chi phí + tỷ lệ khách đọc) — chốt ở Pha 2."
+  - "Trang đặt công khai cho khách dùng không cần tài khoản hay đăng nhập nhẹ? (thuận tiện vs chống spam)"
+  - "Định mức tin nhắc/tháng trong gói + cơ chế khi vượt (phí ZNS ~200–800đ/tin có thể vượt cả gói)."

@@ -1,0 +1,70 @@
+# Khuôn PRD dạng cấu trúc (YAML). Điền xong ghi ra `docs/sdd/PRD.yaml`.
+# PRD = bản đồ TOÀN hệ thống (CÁI GÌ). Thứ tự làm → ROADMAP (Pha 2). Cách cài đặt → Pha 3.
+#
+# QUY TẮC VIẾT YAML (tránh hỏng dữ liệu):
+#   • Mỗi tính năng viết dạng KHỐI (mỗi trường một dòng), KHÔNG dùng flow-map { } một dòng.
+#   • LUÔN để giá trị chữ trong "dấu nháy kép" — vì tiếng Việt hay có dấu phẩy và dấu hai chấm
+#     (vd "13/2023: ...") sẽ làm vỡ YAML nếu không quote.
+#   • Giá trị viết tiếng Việt thường, dễ đọc; GIỮ nguyên các khóa (key) tiếng Anh như mẫu.
+#
+# CẤU TRÚC tính năng: id (cố định <CỤM>-NN) · layer (C=chính | P=phụ) · name · desc · done_when · links
+#   done_when phải KIỂM ĐƯỢC: đầu vào → kết quả quan sát được.
+#     ✗ "số liệu khớp dữ liệu thật"   ✓ "tạo 3 hẹn 300k thì bảng điều khiển hiện đúng tổng 300k"
+#   links = phụ thuộc chéo, vd [TT-02]; để [] nếu không có.
+#
+# ĐỦ 3 LỚP cho mỗi cụm: (C) tính năng chính · (P) tính năng phụ (kiểm tra nhập, hoàn tác/thùng rác,
+#   phân trang, trạng thái rỗng, xử lý lỗi, chống trùng…) · cụm SYS xuyên suốt (BẮT BUỘC).
+
+project: "<TÊN DỰ ÁN>"
+
+problem: >
+  <1–3 câu: giải quyết vấn đề gì, cho ai. Kèm một ví dụ khó chịu có thật, đừng chung chung.>
+
+clusters:
+  - code: XX                         # mã cụm viết hoa (HD, NH…)
+    name: "<tên cụm>"
+    features:
+      - id: XX-01
+        layer: C
+        name: "<tên tính năng chính>"
+        desc: "<mô tả ngắn>"
+        done_when: "<đầu vào → kết quả quan sát được>"
+        links: []
+      - id: XX-90
+        layer: P
+        name: "<tính năng phụ — kiểm tra nhập / hoàn tác / trạng thái rỗng / xử lý lỗi…>"
+        desc: "<mô tả ngắn>"
+        done_when: "<…>"
+        links: []
+    # … lặp cho mọi cụm tới khi phủ hết sản phẩm.
+
+  - code: SYS                        # ── BẮT BUỘC: lớp xuyên suốt mọi màn hình ──
+    name: "Xuyên suốt cả sản phẩm"
+    features:                        # cân nhắc đủ; bỏ mục không cần thì ghi lý do ở out_of_scope
+      - id: SYS-01
+        layer: P
+        name: "Khung trang chung"
+        desc: "điều hướng, menu người dùng, chân trang"
+        done_when: "<…>"
+        links: []
+      # SYS-02 đang tải · SYS-03 trang lỗi 404/403/500 · SYS-04 báo lỗi & thành công ·
+      # SYS-05 mất mạng/lưu lỗi · SYS-06 responsive · SYS-07 a11y · SYS-08 múi giờ ·
+      # SYS-09 trợ giúp/FAQ · SYS-10 audit · SYS-11 quyền riêng tư & dữ liệu cá nhân
+
+key_data:                            # TỐI ĐA 5 loại
+  - name: "<loại dữ liệu>"
+    stores: ["<thông tin chính nó lưu>"]
+
+out_of_scope:                        # ÍT NHẤT 3 mục cố tình KHÔNG làm
+  - "<vd: cập nhật tức thời, nhiều nhóm người dùng, bản điện thoại…>"
+
+nfr:                                 # yêu cầu phi chức năng — bỏ mục không cần
+  security: "<đăng nhập, phân quyền, pháp lý dữ liệu cá nhân local>"
+  performance: "<số người dùng/đơn đồng thời dự kiến — chi phối kiến trúc Pha 2>"
+  reliability: "<sao lưu/khôi phục; mức chấp nhận mất dữ liệu>"
+
+fast_track: ["<thêm/sửa/xóa, giao diện, bộ lọc…>"]
+review_carefully: ["<đăng nhập & phân quyền, thanh toán, tính toán cốt lõi…>"]
+
+open_questions:
+  - "<điểm chưa chắc — làm rõ trước khi sang Pha 2>"

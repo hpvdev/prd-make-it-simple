@@ -1,0 +1,79 @@
+project: Đặt Lịch Tiệm Tóc
+
+milestones:
+  - id: M0
+    name: Cổng kiểm chứng rủi ro
+    goal: Đóng R1 (chủ tiệm có chịu trả tiền không) + R2 (kênh nhắc có khả thi/đủ rẻ không) trước khi code nhiều.
+    feature_ids: []
+    tasks:
+      - Chào bán trước, thu cọc/cam kết 5–10 tiệm ở giá cụ thể.
+      - Tra giá ZNS/SMS thật + điều kiện đăng ký OA.
+      - Thử 1 kênh rẻ (email/Zalo cá nhân) xem khách có đọc nhắc.
+    depends_on: []
+    done_when: "≥5 tiệm đặt cọc/cam kết; có bảng giá ZNS/SMS + ước tính chi phí tin/tháng/tiệm so với gói 99–199k; đã chốt kênh nhắc cho M2."
+    estimate: S
+    risk: "Nếu <5 tiệm cọc → dừng hoặc đổi định vị."
+
+  - id: M1a
+    name: "Mạch tạo hẹn chặn trùng (vertical slice tối thiểu)"
+    goal: "Chủ tiệm tạo được hẹn cho thợ và hệ thống từ chối trùng giờ — mạch lõi chạy được."
+    feature_ids: [TT-01, TT-03, TH-01, TH-02, TH-03, DV-01, DV-02, DL-02, DL-03, DL-08, DL-09, SYS-08]
+    depends_on: [M0]
+    done_when: "đăng nhập vào đúng dữ liệu tiệm; tạo thợ/dịch vụ/giờ làm; tạo hẹn hộ khách lưu tên+SĐT inline (sổ khách đầy đủ KH-01 để M2); từ chối hẹn đè giờ cùng thợ (DL-08) và ngoài giờ mở cửa/giờ nghỉ (DL-09); 2 yêu cầu đồng thời cùng slot chỉ 1 thành công (khóa tầng DB); mọi giờ hiển thị theo múi giờ tiệm GMT+7 (SYS-08)."
+    estimate: M
+    risk: "DL-08 + truy cập đồng thời + SYS-08 là phần phải tự xem kỹ. Cho 1 tiệm cọc dùng thử nội bộ → điểm replan giữa M1."
+
+  - id: M1b
+    name: "Vòng đời hẹn đầy đủ + khung app dùng hằng ngày"
+    goal: "Quản hẹn đầy đủ trên nền app dùng được mỗi ngày."
+    feature_ids: [TT-02, TT-05, DV-03, DV-04, DL-04, DL-05, DL-06, DL-07, SYS-01, SYS-04, SYS-06]
+    depends_on: [M1a]
+    done_when: "sửa/dời/hủy hẹn không đè giờ hẹn khác; đổi & lọc trạng thái hẹn (DL-06); walk-in chèn tức thì; mọi trang dùng chung khung + điều hướng (SYS-01); thao tác lưu thành/bại đều có thông báo (SYS-04); chạy tốt trên màn hình nhỏ (SYS-06)."
+    estimate: M
+    risk: "Thấp — chủ yếu CRUD + UI trên nền M1a."
+
+  - id: M2
+    name: Nhắc lịch & giảm no-show
+    goal: Tự nhắc, giảm no-show qua kênh đã chốt ở M0.
+    feature_ids: [NL-01, NL-02, NL-03, NL-04, NL-05, KH-01, KH-02, KH-03, KH-05, TT-04, SYS-10, SYS-11]
+    depends_on: [M1b]
+    done_when: "tới mốc trước 24h có bản ghi gửi thành công từ nhà cung cấp; khách bấm link đổi trạng thái hẹn; chạy lại không gửi trùng; tin lỗi thấy được + thử lại có giới hạn; có trang chính sách + thao tác xóa dữ liệu khách chạy được."
+    estimate: M-L
+    risk: "R2 (chi phí tin) + dữ liệu cá nhân (Nghị định 13). Nếu chi phí tin vượt biên gói → giảm còn 1 mốc nhắc / đổi kênh."
+
+  - id: M3
+    name: Khách đặt online
+    goal: Mở kênh khách tự đặt, chống giành slot + spam.
+    feature_ids: [DL-01, DL-10, KH-04, SYS-02, SYS-03, SYS-05, SYS-07]
+    depends_on: [M1b, M2]
+    done_when: "khách mở link tạo được hẹn và hiện trên lịch tiệm; 2 khách không đặt trùng 1 slot (DL-10); gộp được khách trùng SĐT; có chống lạm dụng cơ bản."
+    estimate: M
+    risk: "spam/khách lạ; kiểm với 1 tiệm thật mở link công khai."
+
+  - id: M4
+    name: Báo cáo & phân quyền & NFR
+    goal: Chủ tiệm thấy hiệu quả; siết phân quyền; nền vận hành bền.
+    feature_ids: [BC-01, BC-02, BC-03, BC-04, TH-04, SYS-09]
+    depends_on: [M1b, M2, M3]
+    done_when: "số liệu báo cáo = tổng bản ghi tương ứng; thợ không sửa được dữ liệu tiệm (TH-04); có sao lưu/khôi phục cơ bản (NFR)."
+    estimate: M
+    risk: "TH-04 là phần phải tự xem kỹ (rủi ro phân quyền)."
+
+  - id: M5
+    name: Vận hành thương mại
+    goal: Thu tiền, onboarding diện rộng.
+    feature_ids: [TT-06]
+    depends_on: [M1b, M2, M3, M4]
+    done_when: "hết hạn gói → khóa tính năng trả phí đúng cách; quy đổi tiệm cọc M0 → trả phí thật."
+    estimate: M
+    risk: "TT-06 là phần phải tự xem kỹ; đo lại R1 (số tiệm trả phí — thước đo thành công ở brief)."
+
+coverage: "DL-01..10, KH-01..05, DV-01..04, TH-01..04, NL-01..05, BC-01..04, TT-01..06, SYS-01..11 — phủ hết, không thêm mã ngoài PRD."
+
+deferred:
+  - "DL-01 (đặt online) & DL-10 (khóa slot tạm) → M3, vì cần chốt cơ chế chống spam trước."
+  - "TT-06 (thu tiền) → M5, sau khi sản phẩm đủ giá trị."
+  - "Hướng đột phá 'máy giữ ghế đầy' (cọc, waitlist, Zalo Mini App) → tầm nhìn, chưa làm (xem product-brief)."
+
+backlog:
+  - "Định mức tin nhắc/tháng theo gói + cơ chế khi vượt (phí ZNS) — quyết ở M2/M5."

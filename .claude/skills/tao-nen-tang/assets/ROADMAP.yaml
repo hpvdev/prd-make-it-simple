@@ -1,0 +1,52 @@
+# Khuôn ROADMAP dạng cấu trúc (YAML). Điền xong ghi ra `docs/sdd/ROADMAP.yaml`.
+# ROADMAP chỉ lo THỨ TỰ làm các cụm/mã ID đã có trong PRD.yaml — KHÔNG định nghĩa lại tính năng.
+# Giá trị viết tiếng Việt; GIỮ nguyên khóa (key) tiếng Anh.
+# QUY TẮC: LUÔN để giá trị chữ trong "dấu nháy kép" (tiếng Việt hay có dấu phẩy/dấu hai chấm dễ vỡ YAML);
+#   feature_ids viết dạng [DL-01, DL-02] — mã ID không có dấu nên không cần quote.
+
+project: <TÊN DỰ ÁN>
+
+milestones:
+  # M0 — TÙY CHỌN: cổng kiểm chứng rủi ro, làm TRƯỚC khi code nhiều nếu brief có rủi ro lớn
+  # (vd "có ai trả tiền không", "kênh ngoài có khả thi/đủ rẻ không"). Bỏ nếu không có rủi ro kiểu đó.
+  - id: M0
+    name: Cổng kiểm chứng rủi ro
+    goal: <đóng rủi ro lớn nhất ở brief trước khi đầu tư xây>
+    feature_ids: []                 # M0 phi kỹ thuật — KHÔNG code tính năng PRD
+    tasks: [<chào bán trước / phỏng vấn trả tiền / tra chi phí tích hợp…>]
+    depends_on: []
+    done_when: <tín hiệu đo được, vd ≥N khách cam kết / có bảng giá thật>
+    estimate: S                     # S / M / L
+    risk: <điểm replan nếu tín hiệu xấu — dừng hoặc đổi hướng>
+
+  - id: M1
+    name: <lát cắt chạy trước — một mạch dùng được đầu→cuối>
+    goal: <giá trị giao được, một câu>
+    # Kéo lớp SYS nền tảng (SYS-01/04/08…) vào NGAY M1 để thật sự "dùng được".
+    feature_ids: [<TT-01, TH-01, …, SYS-01, SYS-04, SYS-08>]
+    depends_on: [M0]
+    done_when: <tiêu chí đo được — gồm cả ràng buộc lõi như chặn trùng>
+    estimate: L
+    risk: <rủi ro chính + cách kiểm trước khi dồn lực>
+
+  - id: M2
+    name: <…>
+    goal: <…>
+    feature_ids: [<…>]
+    depends_on: [M1]
+    done_when: <…>
+    estimate: M
+    risk: <…>
+  # … lặp tới khi PHỦ HẾT mã ID trong PRD.
+
+# Đối chiếu độ phủ: liệt kê toàn bộ mã ID PRD, đảm bảo mỗi mã nằm ĐÚNG MỘT milestone.
+# Không để sót mã, không thêm mã ngoài PRD.
+coverage: "<vd: DL-01..10, KH-01..05, … — phủ hết>"
+
+# Phần cố tình hoãn (ghi rõ để không bị coi là bỏ sót)
+deferred:
+  - <cụm/mã ID hoãn + lý do>
+
+# Backlog / ý tưởng (bắt lấy, không nhảy vào giữa chừng)
+backlog:
+  - <ý tưởng + 1 dòng ghi chú>
