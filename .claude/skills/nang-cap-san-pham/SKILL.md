@@ -37,3 +37,33 @@ cập nhật bản đồ tính năng (PRD + ROADMAP) cho cái muốn nâng cấp
 **Phân biệt S2 vs S3 (quan trọng):** không chỉ check "PRD tồn tại". **Đối chiếu nhanh** PRD ↔ code:
 đếm route/model/service thật so với cụm liệt kê trong PRD. Lệch đáng kể (nhiều route không có trong
 PRD, hoặc PRD ghi cụm mà code không có) → xử như **S3**, để user làm trọng tài ở GATE 1.
+
+## Bước 1 — Tái dựng bản đồ hiện trạng (chỉ S3)
+Dispatch agent (subagent_type `Explore` hoặc `general-purpose`) đọc codebase: routes, models,
+services, schema DB. Yêu cầu agent điền khuôn `assets/ban-do-hien-trang.md` — **mỗi tính năng phải
+kèm `evidence` (file:dòng / tên route)**, không bịa. Nếu có `docs/sdd/PRD.yaml` cũ → agent điền cả
+mục "Đối chiếu PRD cũ" (khớp/lệch).
+
+> 🚧 **GATE 1 (gate cứng — DỪNG chờ người):** trình user bản đồ hiện trạng (gọn, theo cụm) + các
+> "điểm nghi ngờ" + (nếu có) phần "lệch PRD cũ". Hỏi user xác nhận/sửa. Nếu PRD cũ lệch code → user
+> là trọng tài "tin PRD hay tin code". **Không tự quyết, không đi tiếp khi chưa có xác nhận.**
+>
+> 💡 **Gợi ý ngưỡng "lệch đáng kể":** ≥20% tập route/model, hoặc ≥3 cụm/route không khớp — dưới
+> ngưỡng thì vẫn ưu tiên hỏi user ở GATE 1. Ngưỡng này chỉ là gợi ý; user là trọng tài cuối.
+
+(S2 bỏ qua bước này — PRD cũ chính là bản đồ hiện trạng.)
+
+## Bước 2 — 🚧 GATE 2: chọn loại nâng cấp (gate cứng)
+Dùng `AskUserQuestion` (môi trường không có → hỏi văn bản, CHỜ trả lời, không tự chọn). User chọn:
+
+| Nhãn | Khi nào | Skill làm gì |
+|---|---|---|
+| **Thêm / tối ưu tính năng** *(gọn — khuyến nghị mặc định)* | Định vị đã chốt, chỉ thêm/sửa/tối ưu trong khung cũ | BỎ cổng nghiên cứu + cổng đột phá. Vào thẳng Bước 3. |
+| **Mở hướng mới / pivot** *(đầy)* | Đổi định vị, thêm hướng sản phẩm lớn | BẬT cổng nghiên cứu (mức user chọn) + dispatch `chien-luoc-dot-pha` như greenfield, rồi vào Bước 3. |
+
+**Cổng C (tùy chọn — phân tích nợ kỹ thuật):** nếu user nói mục tiêu là *tối ưu*, hỏi thêm (bấm
+chọn) có muốn agent map vùng code rủi ro / chưa test / nợ kỹ thuật không. Bật → kết quả feed vào
+milestone tối ưu ở Bước 4 (ca 4). Không bật → bỏ qua.
+
+> 💡 **Đề xuất:** nếu user chỉ mô tả "thêm tính năng X" → nghiêng nhánh **gọn**; chỉ chọn **đầy** khi
+> user nói tới đổi hướng/đối thủ mới. Luôn để user chốt — đây là gate cứng.
