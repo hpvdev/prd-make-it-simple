@@ -80,7 +80,7 @@ nói thẳng cho user + đề xuất cách hòa giải, KHÔNG lặng lẽ thêm
 ## Bước 4 — Cập nhật in-place PRD + ROADMAP
 1. **Archive bản cũ** (`docs/sdd/archive/` + hậu tố thời gian — lệnh ở conventions §2) TRƯỚC khi ghi.
 2. **PRD.yaml:** thêm tính năng với **mã ID nối tiếp** (đọc mã lớn nhất mỗi cụm → cấp tiếp; cụm mới →
-   mã cụm mới từ `-01`). Đánh dấu `[MỚI]`/`[SỬA]` ở `desc`. Giữ đủ (C)/(P) + done_when kiểm được + links.
+   mã cụm mới từ `-01`; vd cụm DV đang tới DV-04 thì tính năng mới là DV-05; còn cụm hoàn toàn mới vd "Khuyến mãi" → đặt mã cụm mới chưa dùng như KM, bắt đầu KM-01). Đánh dấu `[MỚI]`/`[SỬA]` ở `desc`. Giữ đủ (C)/(P) + done_when kiểm được + links.
    **KHÔNG tái dùng số của tính năng đã xóa.**
 3. **ROADMAP.yaml:** xếp tính năng mới vào milestone (mới hoặc có sẵn) + depends_on + done_when đo được.
    Cập nhật `coverage`. **Việc "tối ưu" (ca 4)** → milestone bảo trì riêng `OPT-n` (mục tiêu + tiêu chí
@@ -93,5 +93,6 @@ nói thẳng cho user + đề xuất cách hòa giải, KHÔNG lặng lẽ thêm
 - **Ca 1 — PRD cũ lệch code:** đã xử ở Bước 0 (đối chiếu → tụt S3) + GATE 1 (user trọng tài).
 - **Ca 2 — đổi data model phá tương thích:** chỉ GHI NHẬN "tính năng này đụng data model X" vào PRD +
   **gắn cờ ⚠️ cần người duyệt + cần chiến lược migration**, đẩy quyết định sang Pha 2. KHÔNG tự chốt.
+  **Chỉ ghi tên model/field bị đụng + một dòng vì sao phá tương thích** — KHÔNG ghi migration plan, KHÔNG ghi câu lệnh ALTER/đổi schema, KHÔNG đề xuất chiến lược kỹ thuật (đó là việc Pha 2).
 - **Ca 3 — xung đột tính năng cũ:** nêu rõ cho user ở Bước 3 (qua links), đề xuất hòa giải, user quyết.
 - **Ca 4 — nhánh tối ưu (không thêm tính năng):** đi vào ROADMAP (`OPT-n`), KHÔNG vào PRD. Cổng C feed vào đây.
