@@ -45,5 +45,19 @@ while IFS= read -r path || [ -n "$path" ]; do
   echo "  ✓ $path"
 done < "$MANIFEST"
 
+# Xu ly root CLAUDE.md rieng: chi sinh stub neu chua co (khong de len CLAUDE.md da co)
+if [ ! -f "$DEST/CLAUDE.md" ]; then
+  cat > "$DEST/CLAUDE.md" << 'STUB_EOF'
+# CLAUDE.md
+
+> Project mới cài MyAIKit. Sau khi chạy Pha 2 (skill `tao-nen-tang`), file này
+> sẽ được bổ sung import tự động quy ước dự án (AGENTS.md).
+> Hiện chưa import gì để tránh trỏ tới file chưa tồn tại.
+STUB_EOF
+  echo "  ✓ CLAUDE.md (stub moi)"
+else
+  echo "  • CLAUDE.md (giu nguyen — da co)"
+fi
+
 echo ""
 echo "Xong. Buoc tiep: mo project dich bang Claude Code roi go /tao-san-pham de bat dau Pha 1."
