@@ -1,30 +1,20 @@
-# qi-ecosystem — Claude-specific overlay
+# MyAIKit — Claude-specific overlay
 
-> This file holds Claude Code-specific settings only. All cross-tool rules (artifact output language, scale priority, the 5 critical rules, workflow checklist, conflict resolution) live in [`/AGENTS.md`](../AGENTS.md) — Claude Code auto-loads them through the `@-import` below.
+> Overlay cấu hình riêng cho Claude Code. Quy ước cross-tool (ngôn ngữ output artifact,
+> quy tắc dự án) sống trong `docs/sdd/AGENTS.md` sau khi đã chạy Pha 2 — KHÔNG import ở đây
+> để tránh phụ thuộc file chưa tồn tại lúc mới cài kit.
 
-## Communication language (chat with the user)
+## Ngôn ngữ giao tiếp (chat với user)
 
-**Reply in Vietnamese.** Project standard: `communication_language: Vietnamese`. Keep replies short (3-5 lines for exploratory questions); avoid long tables or extra headers unless the user asks for them.
+**Trả lời bằng tiếng Việt.** Giữ câu trả lời ngắn (3–5 dòng cho câu hỏi thăm dò); tránh bảng
+dài hoặc thêm header trừ khi user yêu cầu.
 
-This rule covers chat replies only. Artifact files (validation reports, planning docs, dev notes) follow `document_output_language: Vietnamese`. AI-instruction files (this file, AGENTS.md, `docs/coding-rules.md`) are written in English for LLM readability.
+Quy tắc này chỉ áp cho chat. File artifact (báo cáo, tài liệu kế hoạch, dev notes) theo
+`document_output_language: tiếng Việt`. File hướng dẫn cho AI (file này, SKILL.md) có thể
+viết tiếng Anh cho LLM dễ đọc.
 
-## Serena MCP — code intelligence (prefer for symbol-level work)
+## Auto-load quy ước dự án (sau Pha 2)
 
-Serena is connected via MCP and exposes semantic, symbol-level tools backed by a language server. At the **start of each session that involves reading or editing code**:
-
-1. Ensure the `qi-ecosystem` project is active (`mcp__serena__activate_project` if `get_current_config` reports no active project).
-2. Read `mcp__serena__initial_instructions` once, then follow it.
-
-**When to prefer Serena over built-in tools:**
-
-- **Code navigation / understanding** → `get_symbols_overview`, `find_symbol` (overview first with `depth=1`, then `include_body=True` only for the symbol you need), `find_referencing_symbols` for callsites. Avoid reading whole code files for discovery.
-- **Symbol-level edits** (whole function/class/method) → `replace_symbol_body`, `insert_after_symbol` / `insert_before_symbol`.
-- **Few-line edits inside a larger symbol** → `replace_content` (regex/string).
-
-**When built-in tools are fine:** small one-off reads after you already have the overview, non-code files (md/json/config), Glob/Grep for discovery, and edits where the harness Edit tracking matters more than token efficiency. This is a *preference for symbol-heavy work*, not an absolute ban on Read/Edit.
-
-> Note: Serena tool line numbers are **0-based** (built-in tools are 1-based).
-
-## Cross-tool rules (auto-import)
-
-@../AGENTS.md
+Khi project đã chạy skill `tao-nen-tang` (Pha 2), nó sinh `docs/sdd/AGENTS.md` và `CLAUDE.md`
+gốc repo có dòng `@docs/sdd/AGENTS.md`. Claude Code auto-load AGENTS qua đường đó — không cần
+khai báo lại trong file này.
