@@ -4,6 +4,7 @@ settings.local.json
 # Plugin caches & runtime state
 plugins/cache/
 .cache/
+scheduled_tasks.lock
 
 # Plugin-managed BMAD skills (delivered via superpowers plugin) — keep local only
 skills/bmad-*/
